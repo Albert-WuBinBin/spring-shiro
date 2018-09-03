@@ -9,12 +9,11 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authz.annotation.Logical;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.wbb.shiro.model.Resources;
@@ -40,8 +39,10 @@ public class ShiroController {
 	RoleService roleService;
 	@Resource
 	ResourceService resourceService;
+	@Autowired
+	private ShiroService shiroService;
 	
-	@RequestMapping("/login")
+	@RequestMapping(value="/login",method=RequestMethod.POST)
 	public String login(HttpServletRequest request){
 		
 		System.out.println("login");
@@ -74,37 +75,30 @@ public class ShiroController {
 	@ResponseBody
 	public List<Role> getAllRoles(){
 		List<Role> roles=shiroService.selectAllRoles();
-		System.err.println("----------Role---------------");
+		System.out.println("----------Role---------------");
 		return roles;
 	}
 	@RequestMapping("/getAllResource")
 	@ResponseBody
 	public List<Resources> getAllResource(){
 		List<Resources> Resources=resourceService.selectAllResource();
-		System.err.println("-----------Resources--------------");
+		System.out.println("-----------Resources--------------");
 		return Resources;
 	}
 	@RequestMapping("/getAllUsers")
 	@ResponseBody
 	public List<User> getAllUsers(){
 		List<User> users=userService.getAllUsers();
-		System.err.println("------------getAllUsers-------------");
+		System.out.println("------------getAllUsers-------------");
 		return users;
 	}
 	@RequestMapping("/getTree")
 	@ResponseBody
 	public List<Tree> getTree(){
 		List<Tree> tree=resourceService.returnTree();
-		System.err.println("-----------getTree--------------");
+		System.out.println("-----------getTree--------------");
 		return tree;
 	}
-	@Autowired
-	private ShiroService shiroService;
+
 	
-	@RequestMapping("/testAn")
-	public String testAn(){
-		System.err.println("testAnnotation");
-		shiroService.testAn();
-		return "test";
-	}
 }

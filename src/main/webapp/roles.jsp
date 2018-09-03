@@ -51,102 +51,16 @@ $(function(){
                   $(this).closest('div.datagrid-wrap').find
                   ('div.datagrid-pager').hide();
               }
-
               else $(this).closest('div.datagrid-wrap').find('div.datagrid-pager').show();
           }
 		  
-	});
-		 
+	});	
+	 
 });
 function add(){
-    $('#dlg').dialog('open').dialog('center').dialog('setTitle','添加停车场');
+    $('#dlg').dialog('open').dialog('center').dialog('setTitle','添加角色');
     $('#fm').form('clear');
     
-}
-function edit(){
-    var row = $('#dg').datagrid('getSelected');
-    if (row){
-        $('#dlg1').dialog('open').dialog('center').dialog('setTitle','修改停车场');
-        $('#fm1').form('load',row);
-        url = 'editUsers';
-    }
-}
-function addUsers(){
-	var userid=$("#userid").val();
-	
-	if(!(/^1[3|4|5|8][0-9]\d{8}$/.test(userid))){ 
-		$.messager.alert({
-            title: '提示',
-            msg: "请输入正确的手机号码(11位)!"
-        });
-        $("#usercode").focus();
-        return false; 
-    } 
-    $('#fm').form('submit',{
-        url: 'addUsers',
-        onSubmit: function(){
-            return $(this).form('validate');
-        },
-        success: function(result){
-                var result = eval('('+result+')');
-                if(result.Msg=="true"){
-                	$.messager.alert({
-                        title: 'Success',
-                        msg: "添加成功"
-                    });
-                	  $('#dlg').dialog('close');        
-                      $('#dg').datagrid('reload'); 
-                }
-                else if(result.Msg=="false"){
-                	$.messager.alert({
-                        title: '提示',
-                        msg: "添加失败，该用户编码已经存在，请重新输入!"
-                    });
-                }
-                
-            
-        }
-    });
-}
-function editUsers(){
-	 var row = $('#dg').datagrid('getSelected');
-	 var usercode=row.usercode;
-    $('#fm1').form('submit',{
-        url: 'editUsers?usercode='+usercode,
-        onSubmit: function(){
-            return $(this).form('validate');
-        },
-        success: function(result){
-        	var result = eval('('+result+')');
-            if(result.Msg=="true"){
-            	$.messager.alert({
-                    title: '提示',
-                    msg: "修改成功"
-                });
-            	  $('#dlg1').dialog('close');        
-                  $('#dg').datagrid('reload'); 
-            }
-            
-        }
-    });
-}
-function deleteUser(){
-    var row = $('#dg').datagrid('getSelected');
-    if (row){
-        $.messager.confirm('删除提示','确定要删除这个用户的信息吗?',function(r){
-            if (r){
-                $.post('deleteUser',{usercode:row.usercode},function(result){
-                    if (result.Msg){
-                    	$.messager.alert({
-                            title: '提示',
-                            msg: "删除成功"
-                        });
-                        $('#dg').datagrid('reload');    // reload the user data
-                    } 
-                },'json');
-            }
-        });
-    }
 }
 </SCRIPT>
 </HEAD>
@@ -165,8 +79,8 @@ function deleteUser(){
     </table>
     <div id="toolbar">
        <shiro:hasPermission name="role:add"> <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="add()">添加</a></shiro:hasPermission>
-       <shiro:hasPermission name="role:edit"> <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">修改</a></shiro:hasPermission>
-       <shiro:hasPermission name="role:delete"> <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="deletePark()">删除</a></shiro:hasPermission>
+       <shiro:hasPermission name="role:edit"> <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a></shiro:hasPermission>
+       <shiro:hasPermission name="role:delete"> <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a></shiro:hasPermission>
     </div>
     <div id="dlg" class="easyui-dialog" style="width:400px"
             closed="true" buttons="#dlg-buttons">

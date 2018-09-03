@@ -69,7 +69,7 @@ public class ReService {
 			for(int i=0;i<resource_id.length;i++){
 				
 				if(Integer.parseInt(resource_id[i])==r.getRe_id()){
-					System.err.println("授权："+r.getPermission());
+					System.out.println("授权："+r.getPermission());
 					permissions.add(r.getPermission());
 					break;
 				}
