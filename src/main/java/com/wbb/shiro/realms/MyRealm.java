@@ -14,8 +14,6 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -25,7 +23,6 @@ import org.slf4j.LoggerFactory;
 
 import com.wbb.shiro.model.Role;
 import com.wbb.shiro.model.User;
-import com.wbb.shiro.service.ReService;
 import com.wbb.shiro.service.ResourceService;
 import com.wbb.shiro.service.RoleService;
 import com.wbb.shiro.service.UserService;
@@ -39,37 +36,36 @@ public class MyRealm extends AuthorizingRealm {
 	RoleService roleService;
 	@Resource
 	ResourceService resourceService;
-	@Resource
-	ReService reService;
 	
-	
+	/**
+	 * 认证：登录的时候使用
+	 */
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(
 			AuthenticationToken token) throws AuthenticationException {
 		log.info("认证");
 		UsernamePasswordToken upToken = (UsernamePasswordToken) token;
-
 		String username = upToken.getUsername();
-		
-		List<String> list=userService.getAllUserNames();
-		if(!list.contains(username)){
+		User user=userService.selectByName(username);
+		if(user == null) {
 			throw new UnknownAccountException("用户名不存在");
 		}
-		User user=userService.selectByName(username);
 		Object principal = username;		
 		String credentials = user.getPassword();
 		String realmName = getName();
+		log.info("realmName:"+realmName);
 		ByteSource credentialsSalt = ByteSource.Util.bytes(username);
 		SimpleAuthenticationInfo info = null; 
 		info = new SimpleAuthenticationInfo(principal, credentials,credentialsSalt, realmName);
 		return info;
 	}
-	
+	/**
+	 * 授权：用到权限的时候调用
+	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(
 			PrincipalCollection principals) {
 		log.info("授权");
-		System.err.println("--------授权-------------");
 		Object principal = principals.getPrimaryPrincipal();
 		
 		Set<String> roles=new HashSet<>();
@@ -79,7 +75,7 @@ public class MyRealm extends AuthorizingRealm {
 		roles.add(role.getRole_name());
 		System.err.println(role.toString());
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
-		List<String> permissions=reService.returnPerms(principal.toString());
+		List<String> permissions=resourceService.getPermissons(principal.toString());
 		
 		info.addStringPermissions(permissions);
 		

@@ -1,32 +1,30 @@
 package com.wbb.shiro.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Service;
-
-import com.wbb.shiro.dao.ResourceDao;
 import com.wbb.shiro.model.Resources;
 import com.wbb.shiro.model.Tree;
+import com.wbb.shiro.model.Url;
 
-@Service
-public class ResourceService {
+/**
+ *  资源接口
+ * @author wbb
+ */
+public interface ResourceService {
 
-	@Resource
-	ResourceDao resourceDao;
+	public List<Resources> selectAllResources();
 	
-	public List<Resources> selectAllResource(){
-		return resourceDao.selectAllResource();
-	}
-	public List<Tree> returnTree(){
-		List<Tree> list=new ArrayList<>();
-		List<Resources>resources= resourceDao.selectAllResource();
-		for(Resources r:resources){
-			list.add(new Tree(r.getRe_id(),r.getParent_id(),r.getRe_name()));
-		}
-		return list;
-	}
-	
+	public List<Tree> getResourcesTree();
+	/**
+	 * 获取菜单url
+	 * @param username
+	 * @return
+	 */
+	public List<Url> returnUrl(String username);
+	/**
+	 * 获取权限
+	 * @param username
+	 * @return
+	 */
+	public List<String> getPermissons(String username);
 }

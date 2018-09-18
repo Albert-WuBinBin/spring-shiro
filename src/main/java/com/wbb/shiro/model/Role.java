@@ -1,7 +1,5 @@
 package com.wbb.shiro.model;
 
-import java.util.List;
-
 public class Role {
 
 	private int role_id;

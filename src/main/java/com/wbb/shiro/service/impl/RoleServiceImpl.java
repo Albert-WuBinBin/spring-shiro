@@ -1,38 +1,31 @@
-package com.wbb.shiro.service;
+package com.wbb.shiro.service.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import com.wbb.shiro.dao.RoleDao;
 import com.wbb.shiro.model.Resources;
 import com.wbb.shiro.model.Role;
+import com.wbb.shiro.persistence.ResourceMapper;
+import com.wbb.shiro.persistence.RoleMapper;
+import com.wbb.shiro.service.RoleService;
 
+@Service
+public class RoleServiceImpl implements RoleService{
 
-public class ShiroService {
-
-	@RequiresRoles({"admin"})
-	public void testAn(){
-		System.err.println("Data:"+new Date());
-	}
 	@Resource
-	RoleDao roleDao;	
+	RoleMapper roleDao;	
 	@Resource
-	ResourceService resourceService;
+	ResourceMapper resourceMapper;
+	
 	public Role selectRoleByRoleId(int role_id){
 		return roleDao.selectRoleByRoleId(role_id);
 	}
-	@RequiresPermissions({"role:select"})
 	public List<Role> selectAllRoles(){
-		System.err.println("role:select");
 		List<Role> roles=roleDao.selectAllRoles();
-		List<Resources> resources=resourceService.selectAllResource();
+		List<Resources> resources=resourceMapper.selectAllResources();
 		for(Role role:roles){
 			String[] re_id=role.getResource_id().split(",");
 			StringBuffer re_id1=new StringBuffer();
@@ -44,8 +37,9 @@ public class ShiroService {
 				}
 			}
 			role.setResource_id(re_id1.toString());
-			
 		}
 		return roles;
 	}
+	
 }
+ 

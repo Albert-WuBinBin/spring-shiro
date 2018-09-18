@@ -17,13 +17,13 @@
 	<!-- 1.配置SecurityManager-->
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 		<property name="cacheManager" ref="cacheManager"></property>
-		<!-- 一个realm的时候，就用属性<property name="realm" ref="myRealm"/> --> 
-		<!-- 多个realm的时候， 可以用-->
 		<property name="authenticator" ref="authenticator"></property>
+		<!-- 一个realm的时候，就用属性<property name="realm" ref="myRealm"/> --> 
+		<!-- 多个realm的时候， 可以用<property name="realms"></property>-->
 		<property name="realms">
 			<list>
-				
 				<ref bean="myRealm"/>
+				<!-- <ref bean="jdbcRealm"/> -->
 			</list>
 		</property>
 	</bean>
@@ -95,6 +95,6 @@
 			</value>
 		</property>	
 		</bean>
-		<bean id="shiroService" class="com.wbb.shiro.service.ShiroService"></bean>
+		
 		<import resource="mybatis.xml"/>
 </beans>
